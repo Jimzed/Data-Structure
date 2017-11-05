@@ -1,0 +1,64 @@
+public class LinkQueue1<E> {
+    public class Node<E>{
+        E data;
+        Node<E> next;
+        public Node(){
+        }
+        public Node(E data,Node next){
+            this.data=data;
+            this.next=next;
+        }
+    }
+    private Node<E> front;
+    private Node<E> rear;
+    private int size;
+
+    public LinkQueue1(){
+        front=null;
+        rear=null;
+        size=0;
+    }
+    public Boolean empty(){
+        return size==0;
+    }
+    public void push(E data){
+        if(empty()){
+            front=new Node<E>(data,null);
+            rear=front;
+        }else{
+            Node<E> newNode=new Node<E>(data,null);
+            rear.next=newNode;
+            rear=rear.next;
+        }
+        size++;
+    }
+    public Node<E> poll(){
+        if(empty()){
+            throw new RuntimeException("空队列异常");
+        }else{
+            Node<E> oldNode = front;
+            front=front.next;
+            oldNode.next=null;
+            size --;
+            return oldNode;
+        }
+    }
+    public Node<E> peek(){
+        if(empty()){
+            throw new RuntimeException("空队列异常");
+        }else{
+            return front;
+        }
+    }
+    public int length(){
+        return size;
+    }
+
+    public static void main(String[] args) {
+        LinkQueue1<Character> linkQueue1=new LinkQueue1<Character>();
+        linkQueue1.push('A');
+        linkQueue1.poll();
+        linkQueue1.push('C');
+        System.out.println(linkQueue1.peek().data);
+    }
+}
