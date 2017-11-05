@@ -1,0 +1,48 @@
+import java.util.Stack;
+
+//使用Dijkstra双栈算法实现表达式求值,
+// 这个算法太low了有待改进只能算双目，而且外面各种包括号
+public class Dijkstra {
+    Stack<Double> vals=new Stack<Double>();
+    Stack<Character> op=new Stack<Character>();
+    public Double compute(String str){
+        char []ch=str.toCharArray();//将字符串拆分为字符数组
+        for(int i=0;i<ch.length;i++){
+            //把符号进入到操作栈
+            if(ch[i]=='+'){
+                op.push(ch[i]);
+            }else if (ch[i]=='-'){
+                op.push(ch[i]);
+            }else if (ch[i]=='*'){
+                op.push(ch[i]);
+            }else if (ch[i]=='/'){
+                op.push(ch[i]);
+            }else if (ch[i]=='('){//发呆
+
+            }else if (ch[i]==')'){
+                char o = op.pop();
+                Double val=vals.pop();//"((子节点链表示法+(2+3))*2)"
+                if(o == '+'){
+                    val=val + vals.pop();
+                }else if(o == '-'){
+                    val=vals.pop() - val;
+                }else if(o == '*'){
+                    val=vals.pop() * val;
+                }else if(o == '/'){
+                    val=vals.pop() / val;
+                }
+                vals.push(val);
+            }else {
+                //把操作数压入vals栈中
+                vals.push(Double.parseDouble(Character.toString(ch[i])));
+            }
+        }
+        return vals.pop();
+    }
+
+    public static void main(String[] args) {
+        Dijkstra d_stack=new Dijkstra();
+        String s = "((子节点链表示法+(2+3))*2)";
+        System.out.println(d_stack.compute(s));
+    }
+}
