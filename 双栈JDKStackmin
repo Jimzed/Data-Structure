@@ -1,5 +1,3 @@
-package 数据结构.栈Stack;
-
 import java.util.Stack;
 
 //用双栈实现求栈的最小值
