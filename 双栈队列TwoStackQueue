@@ -1,0 +1,53 @@
+import java.util.Stack;
+
+public class TwoStackQueue<E> {
+
+    private Stack<E> stackpush;//压栈，放入元素的
+    private Stack<E> stackpop;//出栈，弹出元素的
+
+    public TwoStackQueue() {
+        stackpush = new Stack<E>();
+        stackpop = new Stack<E>();
+    }
+
+    //压栈
+    public void offer(E value) {
+        stackpush.push(value);
+    }
+
+    //出栈
+    public E poll() {
+        //只要stackpop为空而且收到了出栈指令，stackpop就会将，stackpush
+        //的所有元素都接受过来，直到stackpop弹光元素
+        if (stackpop.empty() && stackpush.empty()) {
+            throw new RuntimeException("空栈异常");
+        } else if (stackpop.empty()) {
+            while (!stackpush.empty()) {
+                stackpop.push(stackpush.pop());
+            }
+        }
+        return stackpop.pop();
+    }
+
+    //查看栈顶元素
+    public E peek() {
+        if (stackpop.empty() && stackpush.empty()) {
+            throw new RuntimeException("空栈异常");
+        } else if (stackpop.empty()) {
+            while (!stackpush.empty()) {
+                stackpop.push(stackpush.pop());
+            }
+        }
+        return stackpop.peek();
+    }
+
+    public static void main(String[] args) {
+        TwoStackQueue<Integer> twoStackQueue = new TwoStackQueue<>();
+        twoStackQueue.offer(1);
+        twoStackQueue.offer(2);
+        twoStackQueue.offer(3);
+        System.out.println(twoStackQueue.poll());
+        twoStackQueue.offer(4);
+        System.out.println(twoStackQueue.poll());
+    }
+}
