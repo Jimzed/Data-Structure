@@ -1,0 +1,48 @@
+/**
+ * 单向循环链表形成约瑟环
+ * 运行数据：
+ * 出圈顺序为:
+ * 3 6 9 12 15 18 21 24 27 30 33 36 39 子节点链表示法 5 10 14 19 23 28 32 37 41 7 13 20 26 34 40 8 17 29 38 11 25 2 22 4 35 16
+ * 幸存者是:31
+ */
+public class Josephus {
+    public class Node {
+        int data;
+        Node next;
+
+        public Node(int data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+    }
+
+    public void computer(int n, int m) {
+        Node header = new Node(1, null);
+        Node tail = header;
+        for (int i = 2; i <= n; i++) {//建立单向链表
+            Node newNode = new Node(i, null);
+            tail.next = newNode;
+            tail = newNode;
+        }
+        tail.next = header;//形成循环链表
+        System.out.println("出圈顺序为:");
+        Node currentNode = tail;
+        while (currentNode != currentNode.next) {
+            for (int i = 1; i < m; i++) {
+                currentNode = currentNode.next;//此时currentNode是将出列的节点的前一个节点
+            }
+            System.out.print(currentNode.next.data + " ");
+            currentNode.next = currentNode.next.next;
+        }
+        System.out.println();
+        System.out.println("幸存者是:" + currentNode.data);
+    }
+
+
+    public static void main(String[] args) {
+        int n = 41;
+        int m = 3;
+        Josephus josephus = new Josephus();
+        josephus.computer(n, m);
+    }
+}
