@@ -1,0 +1,142 @@
+/**
+ * 单向链表
+ */
+public class LinkList<E> {
+    public class Node<E> {
+        private E data;
+        private Node next;
+
+        public Node(E data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+    }
+
+    private Node header;//头指针
+    private Node tail;//尾指针
+    private int size;//节点的数目
+
+    public LinkList() {
+        header = null;
+        tail = null;
+        size = 0;
+    }
+
+    //判断是否为空
+    public Boolean empty() {
+        return size == 0;
+    }
+
+    //采用尾插法为链表添加新的节点
+    public void addTail(E data) {
+        if (empty()) {
+            header = new Node(data, null);
+            tail = header;
+        } else {
+            Node newNode = new Node(data, null);
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    //采用头插法为链表添加新节点
+    public void addHeader(E data) {
+        if (empty()) {
+            header = new Node(data, null);
+            tail = header;
+        } else {
+            Node<E> newNode = new Node(data, null);
+            newNode.next = header;
+            header = newNode;
+        }
+        size++;
+    }
+
+    //指定位置插入元素
+    public void insert(E data, int index) {
+        if (index < 0 || index > size) {//索引越界就抛异常
+            throw new RuntimeException("单项链表索引越界");
+        }
+        if (empty()) {//链表为空，就创建节点
+            addHeader(data);
+        } else {
+            Node<E> currentNode = header;
+            Node<E> prevNode = null;
+            int i = 0;
+            while (i != index) {
+                prevNode = currentNode;
+                currentNode = currentNode.next;
+            }
+            Node<E> newNode = new Node<E>(data, currentNode);
+            prevNode.next = newNode;
+            size++;
+        }
+    }
+
+    //删除头节点
+    public Node<E> deleteHeader() {
+        if (empty()) {
+            throw new RuntimeException("空链表异常");
+        } else if (size == 1) {//如果队列只有一个节点
+            Node<E> oldNode = header;//得到旧节点
+            header = null;
+            tail = null;
+            return oldNode;
+        } else {
+            Node<E> oldNode = header;
+            header = header.next;
+            oldNode.next = null;
+            size--;
+            return oldNode;
+        }
+    }
+
+    //删除尾节点
+    public Node<E> deleteTail() {
+        if (empty()) {
+            throw new RuntimeException("空链表异常");
+        } else if (size == 1) {//如果队列只有一个节点
+            Node<E> oldNode = tail;//得到旧节点
+            header = null;
+            tail = null;
+            return oldNode;
+        } else {
+            Node<E> oldNode = tail;
+            Node<E> prevNode = getNodeByIndex(size - 1);
+            prevNode.next = null;
+            tail = prevNode;
+            size--;
+            return oldNode;
+        }
+    }
+
+    //索引一个指定节点
+    public Node<E> getNodeByIndex(int index) {
+        if (index < 0 || index > size) {//索引越界就抛异常
+            throw new RuntimeException("单项链表索引越界");
+        }
+        if (empty()) {
+            throw new RuntimeException("空链表异常");
+        } else {
+            Node<E> currentNode = header;
+            int i = 0;
+            while (i != index) {
+                currentNode = currentNode.next;
+                i++;
+            }
+            return currentNode;
+        }
+    }
+
+    public static void main(String[] args) {
+        LinkList<Integer> linkList = new LinkList<>();
+        linkList.addHeader(1);
+        linkList.addHeader(2);
+        linkList.addTail(3);
+        System.out.println(linkList.getNodeByIndex(2).data);
+        System.out.println(linkList.deleteHeader().data);
+        System.out.println(linkList.deleteTail().data);
+        System.out.println(linkList.deleteHeader().data);
+    }
+}
