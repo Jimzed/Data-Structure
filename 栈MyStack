@@ -1,0 +1,105 @@
+import java.util.Iterator;
+
+public class MyStack<E> implements Iterable<E> {
+
+    private Object[] data = null;//数据域
+    private int top = 0;//栈顶指针
+    private int maxSize;//栈的最大容量
+
+    //初始化栈
+    public MyStack(int initSize) {
+        if (initSize < 0) {
+            throw new RuntimeException("初始化不能小于0");
+        } else {
+            data = new Object[initSize];
+            maxSize = initSize;
+        }
+    }
+
+    //判断栈是否为空
+    public Boolean empty() {
+        return top == 0 ? true : false;
+    }
+
+    //扩容
+    public void capacity() {
+        maxSize = maxSize * 3;
+        Object temp[] = new Object[maxSize];
+        for (int i = 0; i < maxSize; i++) {
+            temp[i] = data[i];
+            data[i] = null;
+        }
+        data = temp;
+    }
+
+    //压栈
+    public void push(E value) {
+        if (top == maxSize) {
+            capacity();
+        } else {
+            data[top++] = value;
+        }
+    }
+
+    //出栈
+    public E pop() {
+        if (empty()) {
+            throw new RuntimeException("空栈异常");
+        } else {
+            E value = (E) data[top - 1];
+            data[--top] = null;
+            return value;
+        }
+    }
+
+    //查看栈顶元素
+    public E peek() {
+        if (empty()) {
+            throw new RuntimeException("空栈异常");
+        } else {
+            return (E) data[top - 1];
+        }
+    }
+
+    //实现了迭代器
+    private class StackIterator implements Iterator<E> {
+        private int cursor = 0;
+
+        @Override
+        public boolean hasNext() {
+            return data[cursor] != null;
+        }
+
+        @Override
+        public E next() {
+            E value = (E) data[cursor];
+            cursor++;
+            return value;
+        }
+    }
+
+    //调用iterator方法就返回一个迭代器实例
+    @Override
+    public Iterator iterator() {
+        return new StackIterator();
+    }
+
+    //清空栈
+    public void clear() {
+        for (int i = 0; i < top; i++) {
+            data[i] = null;
+        }
+        top = 0;
+    }
+
+    public static void main(String[] args) {
+        MyStack<Integer> myStack = new MyStack<Integer>(4);
+        myStack.push(1);
+        myStack.push(2);
+        System.out.println(myStack.pop());
+        Iterator<Integer> it = myStack.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+}
