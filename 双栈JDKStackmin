@@ -1,0 +1,53 @@
+package 数据结构.栈Stack;
+
+import java.util.Stack;
+
+//用双栈实现求栈的最小值
+public class JDKStackmin {
+    private Stack<Integer> stackData; //数据栈
+    private Stack<Integer> stackMin; //最小栈
+
+    public JDKStackmin() {
+        this.stackData = new Stack<Integer>();
+        this.stackMin = new Stack<Integer>();
+    }
+
+    public int pop() {
+        if (this.stackData.isEmpty()) {
+            System.out.println("你的数据栈是空的");
+        }
+        int value = this.stackData.pop();
+        //同步一下，data栈已经移走了,且是最小的,那么最小栈也应该移走最小的
+        if (value == this.getmin()) {
+            this.stackMin.pop();
+        }
+        return value;
+    }
+
+    public void push(int newNum) {
+        if (this.stackMin.isEmpty()) {//如果stackMin为空
+            this.stackMin.push(newNum);
+        } else if (newNum <= this.getmin()) {//如果不为空，则比较newNum和stackMin的栈顶元素中哪个小
+            this.stackMin.push(newNum);//如果newNum更小或两者相等，则newNum也压入stackMin
+        }
+        this.stackData.push(newNum);
+    }
+
+    public int getmin() {
+        if (this.stackMin.isEmpty()) {
+            System.out.println("你的最小栈是空的");
+        }
+        return this.stackMin.peek();//返回栈顶元素
+    }
+
+    public static void main(String[] args) {
+        JDKStackmin stackmin = new JDKStackmin();
+        stackmin.push(5);
+        stackmin.push(6);
+        stackmin.push(4);
+        stackmin.push(7);
+        stackmin.pop();
+        stackmin.pop();
+        System.out.println(stackmin.getmin());
+    }
+}
