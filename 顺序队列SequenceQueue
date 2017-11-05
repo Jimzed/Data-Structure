@@ -1,0 +1,63 @@
+public class SequenceQueue1<E> {
+    private Object data[]=null;
+    private int maxSize;
+    private int front;
+    private int rear;
+    //初始化
+    public SequenceQueue1(int initialSize){
+        if(initialSize>=0){
+            this.maxSize=initialSize;
+            data=new Object[initialSize];
+            front=0;
+            rear=0;
+        }else{
+            throw new RuntimeException("初始化大小不能小于0:"+initialSize);
+        }
+    }
+    //判断是否为空
+    public Boolean empty(){
+        return rear==front?true:false;
+    }
+    //入队
+    public Boolean add(E e){
+        if(rear==maxSize){
+            throw new RuntimeException("队列已满");
+        }else{
+            data[rear++]=e;
+            return true;
+        }
+    }
+    //出队
+    public E remove(){
+        if(empty()){
+            throw new RuntimeException("空队列异常");
+        }else{
+            E value=(E)data[front];
+            data[front++]=null;
+            return value;
+        }
+    }
+
+    public E peek(){
+        if(empty()) {
+            throw new RuntimeException("空队列异常");
+        }else{
+            return (E)data[front];
+        }
+    }
+
+    public int length(){
+        return rear-front;
+    }
+
+    public static void main(String[] args) {
+        SequenceQueue1 sequenceQueue1=new SequenceQueue1(10);
+        sequenceQueue1.add(1);
+        sequenceQueue1.add("你好");
+        sequenceQueue1.add('A');
+        System.out.println(sequenceQueue1.remove());
+        System.out.println(sequenceQueue1.remove());
+        System.out.println(sequenceQueue1.remove());
+        System.out.println(sequenceQueue1.length());
+    }
+}
