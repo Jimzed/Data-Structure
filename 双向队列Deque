@@ -1,0 +1,142 @@
+import java.util.Iterator;
+
+public class MyDeque<E> implements Iterable<E> {
+    //内部内节点
+    public class Node<E> { //节点
+        private E data;//数据
+        private Node next;//指向下一个节点
+        private Node prev;//指向上一个节点
+
+        public Node() {
+        }
+
+        public Node(E e, Node next, Node prev) {
+            this.data = e;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private int size; //链表长度
+    private Node front;//队列头
+    private Node rear;//队列尾
+
+    //初始化
+    public MyDeque() {
+        size = 0;
+        front = null;
+        rear = null;
+    }
+
+    //判断是否为空
+    public Boolean empty() {
+        return size == 0;
+    }
+
+    //返回双向队列长度
+    public int size() {
+        return size;
+    }
+
+    //在头部添加
+    public void offerFirst(E data) {
+        if (empty()) {//如果队列为空，新建一个节点，front和rear全指向该节点
+            front = new Node(data, null, null);
+            rear = front;
+        } else {
+            Node<E> oldNode = front;
+            front = new Node<E>(data, null, null);
+            front.next = oldNode;
+            oldNode.prev = front;
+        }
+        size++;
+    }
+
+    //在尾部添加
+    public void offer(E data) {
+        if (empty()) {//如果队列为空，新建一个节点，front和rear全指向该节点
+            front = new Node(data, null, null);
+            rear = front;
+        } else {
+            Node<E> oldNode = rear;
+            rear = new Node<E>(data, null, null);
+            oldNode.next = rear;
+            rear.prev = oldNode;
+        }
+        size++;
+    }
+
+    //在头部删除
+    public Node<E> pollFirst() {
+        if (empty()) {//如果双向队列为空
+            throw new RuntimeException("空队列异常");
+        } else if (size == 1) {//如果队列只有一个节点
+            Node<E> oldNode = front;//得到旧节点
+            front = null;
+            rear = null;
+            return oldNode;
+        } else {
+            Node<E> oldNode = front;//得到旧节点
+            front = oldNode.next;//让front移动向下一个节点
+            oldNode.next = null;//释放旧节点的next引用
+            front.prev = null;//释放头节点的prev引用
+            size--;
+            return oldNode;
+        }
+    }
+
+    //在尾部删除
+    public Node<E> pollLast() {
+        if (empty()) {
+            throw new RuntimeException("空队列异常");
+        } else if (size == 1) {//如果队列只有一个节点
+            Node<E> oldNode = rear;//得到旧节点
+            front = null;
+            rear = null;
+            return oldNode;
+        } else {
+            Node<E> oldNode = rear;//得到旧节点
+            rear = oldNode.prev;//让rear移动向上一个节点
+            rear.next = null;//释放rear的next引用
+            oldNode.prev = null;//释放旧节点的prev引用
+            size--;
+            return oldNode;
+        }
+    }
+
+    //实现了Iterator的内部类
+    private class DequeIterator implements Iterator<E> {
+        private Node<E> currentNode = front;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public E next() {
+            E data = currentNode.data;
+            currentNode = currentNode.next;
+            return data;
+        }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new DequeIterator();
+    }
+
+    public static void main(String[] args) {
+        MyDeque<Integer> myDeque = new MyDeque<Integer>();
+        myDeque.offerFirst(1);
+        myDeque.offerFirst(2);
+        myDeque.offerFirst(3);
+        myDeque.offerFirst(4);
+        myDeque.offer(5);
+        myDeque.pollLast();
+        Iterator<Integer> it = myDeque.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+}
