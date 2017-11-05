@@ -1,0 +1,170 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class TreeChild1<E> {
+    public static class SonNode {
+        private int pos; //当前节点位置
+        private SonNode next;
+
+        public SonNode(int pos, SonNode next) {
+            this.pos = pos;
+            this.next = next;
+        }
+    }
+
+    public static class Node<E> {
+        private E data;
+        private SonNode first;
+
+        public Node(E data) {
+            this.data = data;
+            this.first = null;
+        }
+
+        @Override
+        public String toString() {
+            if (first != null) {
+                return "TreeChild$Node[data=" + data + ", first=" + first.pos + "]";
+            } else {
+                return "TreeChild$Node[data=" + data + ", first=-1]";
+            }
+        }
+    }
+
+    private final int DEFAULT_TREE_SIZE = 100;
+    private int treeSize = 0;
+    private Node<E> nodes[]; //记录该树所有节点
+    private int nodeNums; // 记录节点数
+
+    //指定根节点创建树
+    public TreeChild1(E data) {
+        treeSize = DEFAULT_TREE_SIZE;
+        nodes = new Node[treeSize];
+        nodes[0] = new Node<E>(data);
+        nodeNums++;
+    }
+
+    //指定根节点，指定treeSize创建树
+    public TreeChild1(E data, int treeSize) {
+        this.treeSize = treeSize;
+        nodes = new Node[treeSize];
+        nodes[0] = new Node<E>(data);
+        nodeNums++;
+    }
+
+    //为指定节点添加子节点
+    public Node<E> addNode(E data, Node assignNode) {
+        for (int i = 0; i < treeSize; i++) {
+            // 找到数组中第一个为null的元素，该元素保存新节点
+            if (nodes[i] == null) {
+                // 创建新节点，并用指定数组元素保存它
+                nodes[i] = new Node<E>(data);
+                //存到子节点链上
+                if (assignNode.first == null) {
+                    assignNode.first = new SonNode(i, null);
+                } else {
+                    SonNode currentNode = assignNode.first;
+                    while (currentNode != null) {
+                        currentNode = currentNode.next;
+                    }
+                    currentNode = new SonNode(i, null);
+                }
+                nodeNums++;
+                return nodes[i];
+            }
+        }
+        throw new RuntimeException("该树已满，无法添加新节点");
+    }
+
+    //判断树是否为空
+    public boolean empty() {
+        return nodes[0] == null;
+    }
+
+    //返回根节点
+    public Node<E> getRoot() {
+        return nodes[0];
+    }
+
+    //返回指定节点（非叶子节点）的所有子节点
+    public List<Node<E>> getChild(Node assignNode) {
+        List<Node<E>> list = new ArrayList<Node<E>>();
+        // 获取assignNode节点的第一个子节点
+        SonNode currentNode = assignNode.first;
+        while (currentNode != null) {
+            list.add(nodes[currentNode.pos]);
+            currentNode = currentNode.next;
+        }
+        return list;
+    }
+
+    // 返回指定节点（非叶子节点）的第index个子节点
+    public Node<E> assignChild(Node assignNode, int index) {
+        // 获取parent节点的第一个子节点
+        SonNode currentNode = assignNode.first;
+        // 沿着孩子链不断搜索下一个孩子节点
+        for (int i = 0; currentNode != null; i++) {
+            if (index == i) {
+                return nodes[currentNode.pos];
+            }
+            currentNode = currentNode.next;
+        }
+        return null;
+    }
+
+    //返回树的深度
+    public int deep() {
+        return deep(getRoot());
+    }
+
+    // 这是一个递归方法：每棵子树的深度为其所有子树的最大深度 + 1
+    private int deep(Node node) {
+        if (node.first == null) {
+            return 1;
+        } else {
+            // 记录其所有子树的最大深度
+            int max = 0;
+            SonNode currentNode = node.first;
+            // 沿着孩子链不断搜索下一个孩子节点
+            while (currentNode != null) {
+                // 获取以其子节点为根的子树的深度
+                int tmp = deep(nodes[currentNode.pos]);
+                if (tmp > max) {
+                    max = tmp;
+                }
+                currentNode = currentNode.next;
+            }
+            // 最后，返回其所有子树的最大深度 + 1
+            return max + 1;
+        }
+    }
+
+    //返回指定节点的pos
+    public int pos(Node node) {
+        for (int i = 0; i < treeSize; i++) {
+            if (nodes[i] == node) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        TreeChild1<String> tp = new TreeChild1<String>("root");
+        TreeChild1.Node root = tp.getRoot();
+        System.out.println(root);
+        TreeChild1.Node a = tp.addNode("节点1", root);
+        TreeChild1.Node b = tp.addNode("节点2", root);
+        TreeChild1.Node c = tp.addNode("节点3", root);
+        System.out.println("添加子节点后的根结点：" + root);
+        System.out.println("此树的深度：" + tp.deep());
+        // 获取根节点的所有子节点
+        List<TreeChild1.Node<String>> nodes = tp.getChild(root);
+        System.out.println("根节点的第一个子节点：" + a);
+//        System.out.println("根节点的第一个子节点：" + nodes.get(0));
+        // 为根节点的第一个子节点新增一个子节点
+        tp.addNode("节点4", a);
+        System.out.println("此树第一个子节点：" + a);
+        System.out.println("此树的深度：" + tp.deep());
+    }
+}
