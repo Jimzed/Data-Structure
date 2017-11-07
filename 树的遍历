@@ -1,3 +1,5 @@
+package 数据结构.树Tree.树的遍历;
+
 /**
  * 创建一棵树
  */
@@ -36,6 +38,10 @@ public class Node<E> {
         this.rightNode = rightNode;
     }
 }
+
+package 数据结构.树Tree.树的遍历;
+
+import java.util.LinkedList;
 
 public class BinaryTree {
     /**
@@ -97,6 +103,27 @@ public class BinaryTree {
         printNode(root);
     }
 
+    //层序遍历
+    public void levelOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+        LinkedList<Node> deque = new LinkedList<Node>();
+        deque.offer(root); // 首先将根节点存入队列
+        //当队列里有值时，每次取出队首的node打印，打印之后判断node是否有子节点，若有，则将子节点加入队列
+        while (deque.size() > 0) {
+            Node node = deque.peek();
+            deque.poll();
+            printNode(node);
+            if (node.getLeftNode() != null) {
+                deque.offer(node.getLeftNode());
+            }
+            if (node.getRightNode() != null) {
+                deque.offer(node.getRightNode());
+            }
+        }
+    }
+
     public static void main(String[] args) {
         BinaryTree tree = new BinaryTree();
         Node root = tree.init();
@@ -108,12 +135,19 @@ public class BinaryTree {
         System.out.println();
         System.out.println("后序遍历");
         tree.postorderTraversal(root);
+        System.out.println();
+        System.out.println("层序遍历");
+        tree.levelOrder(root);
     }
 }
 
+package 数据结构.树Tree.树的遍历;
+
+import java.util.Stack;
+
 public class BinaryTree1 {
     /**
-     * 堆栈方法遍历二叉树
+     * 非递归(堆栈)方法遍历二叉树
      * 二叉树的先序中序后序排序
      *                          A(6)
      *              B(3)                  C(9)
@@ -190,10 +224,13 @@ public class BinaryTree1 {
     public static void main(String[] args) {
         BinaryTree1 tree1 = new BinaryTree1();
         Node root = tree1.init();
+        System.out.println("先序遍历");
         tree1.preorderTraversal(root);
         System.out.println();
+        System.out.println("中序遍历");
         tree1.inorderTraversal(root);
         System.out.println();
+        System.out.println("后序遍历");
         tree1.postorderTraversal(root);
         System.out.println();
     }
