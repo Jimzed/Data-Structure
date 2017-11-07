@@ -1,0 +1,200 @@
+/**
+ * 创建一棵树
+ */
+public class Node<E> {
+    private E data;
+    private Node<E> leftNode;
+    private Node<E> rightNode;
+
+    public Node(E data, Node leftNode, Node rightNode) {
+        this.data = data;
+        this.leftNode = leftNode;
+        this.rightNode = rightNode;
+    }
+
+    public E getData() {
+        return data;
+    }
+
+    public void setData(E data) {
+        this.data = data;
+    }
+
+    public Node<E> getLeftNode() {
+        return leftNode;
+    }
+
+    public void setLeftNode(Node<E> leftNode) {
+        this.leftNode = leftNode;
+    }
+
+    public Node<E> getRightNode() {
+        return rightNode;
+    }
+
+    public void setRightNode(Node<E> rightNode) {
+        this.rightNode = rightNode;
+    }
+}
+
+public class BinaryTree {
+    /**
+     * 递归方法遍历二叉树
+     * 二叉树的先序中序后序排序
+     *                          A(6)
+     *              B(3)                  C(9)
+     *        D(1)        E(5)        F(7)
+     *            G(2) H(4)              J(8)
+     */
+    //注意必须逆序建立，先建立子节点，再逆序往上建立，因为非叶子结点会使用到下面的节点，而初始化是按顺序初始化的，不逆序建立会报错
+    public Node init() {
+        Node J = new Node(8, null, null);
+        Node H = new Node(4, null, null);
+        Node G = new Node(2, null, null);
+        Node F = new Node(7, null, J);
+        Node E = new Node(5, H, null);
+        Node D = new Node(1, null, G);
+        Node C = new Node(9, F, null);
+        Node B = new Node(3, D, E);
+        Node A = new Node(6, B, C);
+        return A; // 返回根节点
+    }
+
+    public void printNode(Node node) {
+        System.out.print(node.getData() + " ");
+    }
+
+    //先序遍历
+    public void preorderTraversal(Node root) {
+        printNode(root);
+        if (root.getLeftNode() != null) {//使用递归遍历左孩子
+            preorderTraversal(root.getLeftNode());
+        }
+        if (root.getRightNode() != null) {//递归遍历右孩子
+            preorderTraversal(root.getRightNode());
+        }
+    }
+
+    //中序遍历
+    public void inorderTraversal(Node root) {//中序遍历
+        if (root.getLeftNode() != null) {
+            inorderTraversal(root.getLeftNode());
+        }
+        printNode(root);
+        if (root.getRightNode() != null) {
+            inorderTraversal(root.getRightNode());
+        }
+    }
+
+    //后序遍历
+    public void postorderTraversal(Node root) {
+        if (root.getLeftNode() != null) {
+            postorderTraversal(root.getLeftNode());
+        }
+        if (root.getRightNode() != null) {
+            postorderTraversal(root.getRightNode());
+        }
+        printNode(root);
+    }
+
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.init();
+        System.out.println("先序遍历");
+        tree.preorderTraversal(root);
+        System.out.println();
+        System.out.println("中序遍历");
+        tree.inorderTraversal(root);
+        System.out.println();
+        System.out.println("后序遍历");
+        tree.postorderTraversal(root);
+    }
+}
+
+public class BinaryTree1 {
+    /**
+     * 堆栈方法遍历二叉树
+     * 二叉树的先序中序后序排序
+     *                          A(6)
+     *              B(3)                  C(9)
+     *        D(1)        E(5)        F(7)
+     *            G(2) H(4)              J(8)
+     */
+    //注意必须逆序建立，先建立子节点，再逆序往上建立，因为非叶子结点会使用到下面的节点，而初始化是按顺序初始化的，不逆序建立会报错
+    public Node init() {
+        Node J = new Node(8, null, null);
+        Node H = new Node(4, null, null);
+        Node G = new Node(2, null, null);
+        Node F = new Node(7, null, J);
+        Node E = new Node(5, H, null);
+        Node D = new Node(1, null, G);
+        Node C = new Node(9, F, null);
+        Node B = new Node(3, D, E);
+        Node A = new Node(6, B, C);
+        return A; // 返回根节点
+    }
+
+    public void printNode(Node node) {
+        System.out.print(node.getData() + " ");
+    }
+
+    public void preorderTraversal(Node root) { //先序遍历
+        Stack<Node> stack = new Stack<Node>();
+        Node node = root;
+        while (node != null || stack.size() > 0) { //将所有左孩子压栈
+            if (node != null) {
+                printNode(node);
+                stack.push(node);
+                node = node.getLeftNode();
+            } else { //若左孩子为空，返回父节点，取得右孩子
+                node = stack.pop();
+                node = node.getRightNode();
+            }
+        }
+    }
+
+    public void inorderTraversal(Node root) { //中序遍历
+        Stack<Node> stack = new Stack<Node>();
+        Node node = root;
+        while (node != null || stack.size() > 0) {
+            if (node != null) {
+                stack.push(node);
+                node = node.getLeftNode();
+            } else { //若左孩子为空，返回父节点并输出，取得右孩子
+                node = stack.pop();
+                printNode(node);
+                node = node.getRightNode();
+            }
+        }
+    }
+
+    public void postorderTraversal(Node root) {// 后序遍历
+        Stack<Node> stack = new Stack<Node>();
+        Stack<Node> output = new Stack<Node>();//构造一个中间栈来存储后序遍历的结果
+        Node node = root;
+        while (node != null || stack.size() > 0) {
+            if (node != null) {
+                output.push(node);
+                stack.push(node);
+                node = node.getRightNode();
+            } else {
+                node = stack.pop();
+                node = node.getLeftNode();
+            }
+        }
+        while (output.size() > 0) {
+            printNode(output.pop());
+        }
+    }
+
+    public static void main(String[] args) {
+        BinaryTree1 tree1 = new BinaryTree1();
+        Node root = tree1.init();
+        tree1.preorderTraversal(root);
+        System.out.println();
+        tree1.inorderTraversal(root);
+        System.out.println();
+        tree1.postorderTraversal(root);
+        System.out.println();
+    }
+}
