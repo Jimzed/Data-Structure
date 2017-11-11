@@ -1,0 +1,304 @@
+package 数据结构.树Tree.二叉排序树;
+
+/**
+ * 二叉排序树（二叉查找树）（二叉搜索树）
+ * 树的结构
+ *          3
+ *         /  \
+ *        1    5
+ *         \  / \
+ *         2  4  6
+ */
+public class BSTree<E extends Comparable<E>> {
+
+    public static class BSTNode<E extends Comparable<E>> {
+        E key;              //关键字(键值)
+        BSTNode<E> left;    //左孩子
+        BSTNode<E> right;   //右孩子
+        BSTNode<E> parent;  //父节点
+
+        public BSTNode(E key) {
+            this.key = key;
+        }
+
+        public BSTNode(E key, BSTNode<E> left, BSTNode<E> right, BSTNode<E> parent) {
+            this.key = key;
+            this.left = left;
+            this.right = right;
+            this.parent = parent;
+        }
+
+
+        public E getKey() {
+            return key;
+        }
+
+        public void setKey(E key) {
+            this.key = key;
+        }
+
+        public BSTNode<E> getLeft() {
+            return left;
+        }
+
+        public void setLeft(BSTNode<E> left) {
+            this.left = left;
+        }
+
+        public BSTNode<E> getRight() {
+            return right;
+        }
+
+        public void setRight(BSTNode<E> right) {
+            this.right = right;
+        }
+
+        public BSTNode<E> getParent() {
+            return parent;
+        }
+
+        public void setParent(BSTNode<E> parent) {
+            this.parent = parent;
+        }
+    }
+
+    private BSTNode<E> root; //根节点
+
+    public BSTree(E key) {
+        this.root = new BSTNode<E>(key, null, null, null);
+    }
+
+    public BSTNode<E> getRoot() {
+        return root;
+    }
+
+    public void setRoot(BSTNode<E> root) {
+        this.root = root;
+    }
+
+    /**
+     * 先序遍历
+     * 若二叉树非空，则执行以下操作：
+     * (01) 访问根结点；
+     * (02) 先序遍历左子树；
+     * (03) 先序遍历右子树。
+     *
+     * @param node
+     */
+    private void preOrderTraversal(BSTNode<E> node) {
+        if (node != null) {
+            System.out.print(node.key + " ");
+            preOrderTraversal(node.left);
+            preOrderTraversal(node.right);
+        }
+    }
+
+    public void preOrderTraversal() {
+        preOrderTraversal(root);
+    }
+
+    /**
+     * 中序遍历
+     * 若二叉树非空，则执行以下操作：
+     * (01) 中序遍历左子树；
+     * (02) 访问根结点；
+     * (03) 中序遍历右子树。
+     *
+     * @param node
+     */
+    private void inOrderTraversal(BSTNode<E> node) {
+        if (node != null) {
+            inOrderTraversal(node.left);
+            System.out.print(node.key + " ");
+            inOrderTraversal(node.right);
+        }
+    }
+
+    public void inOrderTraversal() {
+        inOrderTraversal(root);
+    }
+
+    /**
+     * 后序遍历
+     * 若二叉树非空，则执行以下操作：
+     * (01) 后序遍历左子树；
+     * (02) 后序遍历右子树；
+     * (03) 访问根结点。
+     *
+     * @param node
+     */
+    private void postOrderTraversal(BSTNode<E> node) {
+        if (node != null) {
+            postOrderTraversal(node.left);
+            postOrderTraversal(node.right);
+            System.out.print(node.key + " ");
+        }
+    }
+
+    public void postOrderTraversal() {
+        postOrderTraversal(root);
+    }
+
+    /**
+     * (递归实现)查找"二叉树x"中键值为key的节点
+     *
+     * @param node
+     * @param key
+     * @return
+     */
+    private BSTNode<E> search(BSTNode<E> node, E key) {
+        if (node == null)
+            return node;
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0)
+            return search(node.getLeft(), key);
+        else if (cmp > 0)
+            return search(node.getRight(), key);
+        else
+            return node;
+    }
+
+    public BSTNode<E> search(E key) {
+        return search(root, key);
+    }
+
+    /**
+     * (非递归实现)查找"二叉树x"中键值为key的节点
+     *
+     * @param node
+     * @param key
+     * @return
+     */
+    private BSTNode<E> iterativeSearch(BSTNode<E> node, E key) {
+        while (node != null) {
+            int cmp = key.compareTo(node.key);
+            if (cmp < 0)
+                node = node.getLeft();
+            else if (cmp > 0)
+                node = node.getRight();
+            else
+                return node;
+        }
+        return node;
+    }
+
+    public BSTNode iterativeSearch(E key) {
+        return iterativeSearch(root, key);
+    }
+
+    /**
+     * 查找最小结点：返回tree为根结点的二叉树的最小结点
+     *
+     * @param node
+     * @return node
+     */
+    private BSTNode<E> minNode(BSTNode<E> node) {
+        if (node == null) {
+            return null;
+        }
+        while (node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+
+    public E minNode() {
+        BSTNode<E> node = minNode(root);
+        if (node != null)
+            return node.key;
+        return null;
+    }
+
+
+    /**
+     * 查找最大结点：返回tree为根结点的二叉树的最大结点
+     *
+     * @param node
+     * @return node
+     */
+    private BSTNode<E> maxNode(BSTNode<E> node) {
+        if (node == null) {
+            return null;
+        }
+        while (node.getRight() != null) {
+            node = node.getRight();
+        }
+        return node;
+    }
+
+    public E maxNode() {
+        BSTNode<E> node = maxNode(root);
+        if (node != null)
+            return node.key;
+        return null;
+    }
+
+    /**
+     * 找结点(node)的后继结点。即，查找"二叉树中数据值大于该结点"的"最小结点"。
+     *
+     * @param node
+     * @return node
+     */
+    public BSTNode<E> successor(BSTNode<E> node) {
+        // 如果x存在右孩子，则"node的后继结点"为 "以其右孩子为根的子树的最小结点"。
+        if (node.getRight() != null) {
+            return minNode(node.right);
+        }
+        // 如果node没有右孩子。则node有以下两种可能：
+        // (01) node是"一个左孩子"，则"node的后继结点"为 "它的父结点"。
+        // (02) node是"一个右孩子"，则查找"node的最低的父结点，并且该父结点要具有左孩子"，找到的这个"最低的父结点"就是"node的后继结点"。
+        BSTNode<E> x = node.getParent();
+        while ((x != null) && (node == x.getRight())) {
+            node = x;
+            x = x.getParent();
+        }
+        return x;
+    }
+
+    /**
+     * 找结点(x)的前驱结点。即，查找"二叉树中数据值小于该结点"的"最大结点"。
+     *
+     * @param node
+     * @return node
+     */
+    public BSTNode<E> predecessor(BSTNode<E> node) {
+        // 如果node存在左孩子，则"node的前驱结点"为 "以其左孩子为根的子树的最大结点"。
+        if (node.getLeft() != null) {
+            return maxNode(node.getLeft());
+        }
+        // 如果node没有左孩子。则node有以下两种可能：
+        // (01) node是"一个右孩子"，则"node的前驱结点"为 "它的父结点"。
+        // (02) node是"一个左孩子"，则查找"node的最低的父结点，并且该父结点要具有右孩子"，找到的这个"最低的父结点"就是"node的前驱结点"。
+        BSTNode<E> x = node.getParent();
+        while ((x != null) && (node == x.getLeft())) {
+            node = x;
+            x = x.getParent();
+        }
+        return x;
+    }
+
+    public static void main(String[] args) {
+        BSTree<Integer> tree = new BSTree<Integer>(3);
+        BSTNode a3 = tree.getRoot();
+        BSTNode c2 = new BSTNode(2);
+        BSTNode c4 = new BSTNode(4);
+        BSTNode c6 = new BSTNode(6);
+        BSTNode b1 = new BSTNode(1, null, c2, a3);
+        BSTNode b5 = new BSTNode(5, c4, c6, a3);
+        a3.setLeft(b1);
+        a3.setRight(b5);
+        c2.setParent(b1);
+        c4.setParent(b5);
+        c6.setParent(b5);
+        tree.preOrderTraversal();
+        System.out.println();
+        tree.inOrderTraversal();
+        System.out.println();
+        tree.postOrderTraversal();
+        System.out.println();
+        System.out.println(tree.minNode());
+        System.out.println(tree.maxNode());
+        System.out.println(tree.successor(a3).key);
+        System.out.println(tree.predecessor(a3).key);
+    }
+}
