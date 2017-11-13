@@ -3,6 +3,10 @@ package 数据结构.图Graph.邻接矩阵无向图;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * 逻辑结构分为两部分：V和E集合。因此，用一个一维数组存放图中所有顶点数据；
+ * 用一个二维数组存放顶点间关系（边或弧）的数据，这个二维数组称为邻接矩阵。
+ */
 public class MatrixUDG {
     private char[] vertexs; // 顶点集合
     private int[][] matrix; // 邻接矩阵
